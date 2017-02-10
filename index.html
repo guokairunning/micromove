@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+	<title>微波炉的仿真</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+	<style type="text/css">
+	html,body,div,p,ul,li{
+		margin: 0px;
+		padding:0px;
+		list-style: none;
+	}
+	   #box{
+	   	width: 650px;
+	   	height:450px;
+	   	margin:50px auto;
+	   	padding:20px;
+	   	border:1px solid #000;
+	   }
+	   #timer{
+	   	width: 350px;
+	   	height: 40px;
+	   	border:1px solid #000;
+	   	margin-bottom:25px;
+	   }
+	   #container{
+	   	width: 350px;
+	   	height: 300px;
+	   	border:1px solid #000;
+	   }
+	   #left{
+	   	width:400px;
+	   }
+	   
+	   #right_nav{
+	   	width:200px;
+	   }
+
+	   ul#fire li{
+	   	float: left;
+	   	width: 60px;
+	   	height: 40px;
+	   	line-height: 40px;
+	   	margin-right: 5px;
+	   	margin-bottom:3px;
+	   	text-align: center;
+	   	cursor: pointer;
+	   }
+	    ul#kinds li{
+	   	width:90px;
+	   	height:60px;
+	   	border:1px solid #000;
+	   	line-height: 60px;
+	   	text-align: center;
+	   	background: #ccc;
+	   	cursor: pointer;
+	   	float: left;
+	   } 
+	   ul#on_off{
+	   	margin-top: 15px;
+	   }
+	   ul#on_off li{
+        float: left;
+	   	width: 45px;
+	   	height: 40px;
+	   	font-size: 8px;
+	   	line-height: 40px;
+	   	margin-right: 5px;
+	   	text-align: center;
+	   	cursor: pointer;
+	   }
+	   ul#on_off .btn{
+	   	margin-top: 10px;
+	   }
+	   .btn{
+	   	background: #ccc;
+	   }
+	   .led span{
+	   	display: block;
+	   	margin:0 auto;
+	   	width: 20px;
+	   	height: 20px;
+	   	border:1px solid #000;
+	   	border-radius: 10px;
+	   	cursor:default;
+	   }
+
+
+	  #left,#right_nav{
+        float: left;
+	  }
+
+	  .active{
+	  	background:green;
+	  }
+     #timer{
+     	font-size: 30px;
+     	text-align: center;
+     }
+	 
+	</style>
+
+</head>
+<body>
+       <div id="box">
+           <div id="left">
+           	   <p id="timer">00:00</p>
+           	   <p id="container"></p>
+           </div>
+       	   <div id="right_nav">
+       	       <ul id="fire">
+	       	   	   <li class="btn">大火</li>
+	       	   	   <li class="btn">中火</li>
+                   <li class="btn">小火</li>
+	       	   	   <li class="led"><span></span></li>
+                   <li class="led"><span></span></li>
+	       	   	   <li class="led"><span></span></li>
+       	   	   </ul>
+       	   	    <p style="clear: left;"></p>
+       	   	   <ul id="kinds">
+       	   	   	 <li>牛奶/咖啡</li>
+       	   	   	 <li>清蒸鱼</li>
+       	   	   	 <li>煮米饭</li>
+       	   	   	 <li>蒸水蛋</li>
+       	   	   	 <li>方便面</li>
+       	   	   	 <li>爆米花</li>
+       	   	   </ul>
+       	   	   <p style="clear: left;"></p>
+       	   	   <ul id="on_off">
+       	   	   	 <li class="btn" id="power">电源</li>
+       	   	   	 <li class="btn" id="pause">暂停</li>
+       	   	   	 <li class="btn" id="door">开/关门</li>
+       	   	   	 <li class="btn" id="food">放食物</li>
+       	   	   	 <li class="led"><span></span></li>
+	       	   	 <li class="led"><span></span></li>
+	       	   	 <li class="led"><span></span></li>
+	       	   	 <li class="led"><span></span></li>
+       	   	   </ul>
+       	   	     <p style="clear: left;"></p> 
+       	   </div>
+       	   <div>
+       	     <input type="text" min="0" value="00" readonly="readonly" style="width:30px;" id="min" />
+       	     <span class="fa fa-caret-square-o-up" style="font-size: 20px;cursor: pointer;" id="up1"></span>
+       	     <span class="fa fa-caret-square-o-down" style="font-size: 20px;cursor: pointer;" id="down1"></span>
+       	     <input  type="text" min="0" value="00" readonly="readonly" style="width:30px;"
+       	     id="sec" />
+       	     <span class="fa fa-caret-square-o-up" style="font-size: 20px;cursor: pointer;"
+       	     id="up2"></span>
+       	     <span class="fa fa-caret-square-o-down" style="font-size: 20px;cursor: pointer;" id="down2"></span>
+       	     <button id="confirm">确认</button>
+       	   </div>
+       </div>
+
+
+
+
+
+       <script type="text/javascript">
+       	  window.onload=function(){
+             var oPower=document.getElementById("power");
+             var oPause=document.getElementById("pause");
+             var oDoor=document.getElementById("door");
+             var aKinds=document.getElementById("kinds").getElementsByTagName("li");
+             var oFood=document.getElementById("food");
+             var aLed1=document.getElementById("fire").getElementsByTagName("span");
+             var aLed2=document.getElementById("on_off").getElementsByTagName("span");
+             var aBtn_fire=document.getElementById("fire").getElementsByClassName("btn");
+         
+            
+
+             var oUp1=document.getElementById('up1');
+             var oUp2=document.getElementById('up2');
+             var oDown1=document.getElementById('down1');
+             var oDown2=document.getElementById('down2');
+
+
+             var flag_power=false;
+             var flag_door=false;
+             var flag_food=false;
+
+                  // 电源
+                 oPower.onclick=function(){
+                 	if(aLed2[0].className=="active")
+                 	{
+                 		aLed2[0].className="";
+                 		flag_power=false;
+                 	}
+                 	else
+                 	{
+                 		aLed2[0].className="active";
+                 		flag_power=true;
+                 	}   
+                 }
+
+                 // 开关炉门
+                 oDoor.onclick=function(){
+                     if(aLed2[2].className=="active")
+                 	{
+                 		aLed2[2].className="";
+                 		flag_door=false;
+                 	}
+                 	else
+                 	{
+                 		aLed2[2].className="active";
+                 		flag_door=true;
+                 	}    
+                 }
+
+                 // 放取食物
+                 oFood.onclick=function(){
+                     if(aLed2[3].className=="active")
+                 	{
+                 		aLed2[3].className="";
+                 		flag_food=false;
+                 	}
+                 	else
+                 	{
+                 		aLed2[3].className="active";
+                 		flag_food=true;
+                 	}    
+                 }
+
+                 //六种预选菜单
+                 for(var i=0;i<aKinds.length;i++)
+                 {
+
+                 	aKinds[i].onclick=function(){
+                 		if(flag_power&&flag_door&&flag_food)
+	                 	{
+	                 		for(var j=0;j<aKinds.length;j++)
+	                 		{
+	                 			aKinds[j].style.background="#ccc";
+	                 		}
+	                 		this.style.background="green";
+	                 	}
+                 		
+                 	}
+                 }
+
+                 // 大、中、小火的选择
+                 for(var i=0;i<aBtn_fire.length;i++)
+                 {
+                    aBtn_fire[i].index=i;
+                    aBtn_fire[i].onclick=function(){
+                    	if(flag_power&&flag_door&&flag_food)
+                    	{
+                    		for(var j=0;j<aBtn_fire.length;j++)
+	                 		{
+	                 			aLed1[j].className="";
+	                 		}
+	                 		aLed1[this.index].className="active";
+                    	}
+                 		
+                 	}
+                 	
+                 }
+
+
+
+                 // 设置时间
+                      var min=document.getElementById("min");
+                      var sec=document.getElementById("sec");
+                      oUp1.onclick=function(){
+                      	var min_val=parseInt(min.value);
+                      	min_val+=1;
+                      	if(min_val<10)
+                      	{
+                      		min.value="0"+min_val;
+                      	}
+                      	else
+                      	{
+                      		min.value=min_val;
+                      	}
+                      	
+                      }
+                      oDown1.onclick=function(){
+                      	var min_val=parseInt(min.value);
+                      	if(min_val>0)
+                      	{
+                      		min_val-=1;
+                      	    if(min_val<10)
+	                      	{
+	                      		min.value="0"+min_val;
+	                      	}
+	                      	else
+	                      	{
+	                      		min.value=min_val;
+	                      	}
+                      	}
+                      }
+
+
+                      oUp2.onclick=function(){
+                      	var sec_val=parseInt(sec.value);
+                      	sec_val+=1;
+                      	if(sec_val<10)
+                      	{
+                            sec.value="0"+sec_val;
+                      	}
+                      	else
+                      	{
+                      		sec.value=sec_val;
+                      	}
+                      	
+                      }
+                      oDown2.onclick=function(){
+                      	var sec_val=parseInt(sec.value);
+                      	if(sec_val>0)
+                      	{
+                      		sec_val-=1;
+                      	    if(sec_val<10)
+	                      	{
+	                            sec.value="0"+sec_val;
+	                      	}
+	                      	else
+	                      	{
+	                      		sec.value=sec_val;
+	                      	}
+                      	}	
+                      }
+
+
+                      // 倒计时  
+                      var oConfirm=document.getElementById("confirm");
+                      var oTimer=document.getElementById("timer");
+
+                      oConfirm.onclick=function(){
+                      	   
+                            oTimer.innerHTML=min.value+":"+sec.value;
+                            var min_val=parseInt(min.value);
+                            var sec_val=parseInt(sec.value);
+                            var second_sum=min_val*60+sec_val;
+                            var timer=null;
+                            clearInterval(timer);
+                             
+                             var timer=setInterval(function(){
+                             	   if(sec_val==0)
+                             	   {
+                             	   	  min_val-=1;
+                             	   	  sec_val=59;
+                             	   }
+                             	   sec_val-=1;
+                             	   oTimer.innerHTML=min_val+":"+sec_val;
+                             },1000)
+
+                             min.value="00";
+                      	     sec.value="00";
+
+
+                      }
+
+
+                    
+
+
+       	  }
+       </script>
+</body>
+</html>
